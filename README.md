@@ -27,8 +27,7 @@ The client side is an HTML page that connects to the server via WebSocket, recei
 **Run the Server:**
 1. Save the server code in a file named server.py.
 2. Save the client code in a file named index.html in the same directory as server.py.
-
-python server.py
+3. python server.py
 
 **Access the Client:**
 1. Open a web browser on a client computer within the same local network.
