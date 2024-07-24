@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Screen Sharing</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+        canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="screen"></canvas>
+    <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
+    <script>
+        var socket = io.connect('http://' + document.domain + ':' + location.port);
+        var canvas = document.getElementById('screen');
+        var context = canvas.getContext('2d');
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        socket.on('connect', function() {
+            console.log('Connected to server');
+            setInterval(function() {
+                socket.emit('request_screenshot');
+            }, 1000);
+        });
+
+        socket.on('screenshot', function(data) {
+            var img = new Image();
+            img.src = 'data:image/jpeg;base64,' + data.image;
+            img.onload = function() {
+                context.drawImage(img, 0, 0, canvas.width, canvas.height);
+            };
+        });
+    </script>
+</body>
+</html>
